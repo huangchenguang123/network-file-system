@@ -91,8 +91,13 @@ public class FileService {
      * @desc delete file
      */
     public boolean delete(String path, String fileName) {
-        File file = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
-        return file.delete();
+        String localPath = String.format("%s/%s/%s", config.getLocalStore(), path, fileName);
+        File file = new File(localPath);
+        if (file.exists()) {
+            return file.delete();
+        } else {
+            throw new RuntimeException(String.format("delete: %s: No such file or directory", localPath));
+        }
     }
 
 }
