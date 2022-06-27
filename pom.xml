@@ -26,6 +26,8 @@
         <spring.version>2.7.0</spring.version>
         <lambok.version>1.18.24</lambok.version>
         <guava.version>14.0.1</guava.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <aspectjweaver.version>1.9.7</aspectjweaver.version>
     </properties>
 
     <dependencyManagement>
@@ -51,9 +53,14 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-rsocket</artifactId>
-                <version>${rsocket.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectjweaver.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

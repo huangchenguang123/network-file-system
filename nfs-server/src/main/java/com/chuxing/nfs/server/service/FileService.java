@@ -2,6 +2,7 @@ package com.chuxing.nfs.server.service;
 
 import com.chuxing.nfs.server.config.NfsConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +31,17 @@ public class FileService {
      * @desc list file
      */
     public List<String> ls(String path) {
-        File file = new File(String.format("%s/%s", config.getLocalStore(), path));
-        String[] result = Optional.ofNullable(file.list()).orElse(new String[0]);
-        return Lists.list(result);
+        if (StringUtils.isBlank(path)) {
+            throw new RuntimeException("path is blank");
+        }
+        String localPath = String.format("%s/%s", config.getLocalStore(), path);
+        File file = new File(localPath);
+        if (file.exists()) {
+            String[] result = Optional.ofNullable(file.list()).orElse(new String[0]);
+            return Lists.list(result);
+        } else {
+            throw new RuntimeException(String.format("ls: %s: No such file or directory", localPath));
+        }
     }
 
     /**
@@ -58,6 +67,9 @@ public class FileService {
      * @desc create dir
      */
     public boolean mkdir(String path) {
+        if (StringUtils.isBlank(path)) {
+            throw new RuntimeException("path is blank");
+        }
         File file = new File(String.format("%s/%s", config.getLocalStore(), path));
         return file.mkdir();
     }
@@ -71,6 +83,16 @@ public class FileService {
         File localFile = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
         file.transferTo(localFile);
         return true;
+    }
+
+    /**
+     * @date 2022/6/27 15:52
+     * @author huangchenguang
+     * @desc delete file
+     */
+    public boolean delete(String path, String fileName) {
+        File file = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
+        return file.delete();
     }
 
 }

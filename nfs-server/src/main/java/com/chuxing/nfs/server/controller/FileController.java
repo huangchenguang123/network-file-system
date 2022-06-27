@@ -1,6 +1,7 @@
 package com.chuxing.nfs.server.controller;
 
 import com.chuxing.nfs.server.common.request.FileRequest;
+import com.chuxing.nfs.server.common.response.Result;
 import com.chuxing.nfs.server.service.FileService;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,8 +32,8 @@ public class FileController {
      * @desc list file
      */
     @RequestMapping("/ls")
-    public List<String> ls(@RequestBody FileRequest request) {
-        return fileService.ls(request.getPath());
+    public Result<List<String>> ls(@RequestBody FileRequest request) {
+        return Result.success(fileService.ls(request.getPath()));
     }
 
     /**
@@ -42,12 +43,13 @@ public class FileController {
      */
     @SneakyThrows
     @RequestMapping("/get")
-    public void get(HttpServletResponse response, @RequestBody FileRequest request) {
+    public Result<Void> get(HttpServletResponse response, @RequestBody FileRequest request) {
         long size = fileService.get(request.getPath(), request.getFileName(), response.getOutputStream());
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("utf-8");
         response.setContentLength((int) size);
         response.setHeader("Content-Disposition", "attachment;filename=" + request.getFileName());
+        return Result.success(null);
     }
 
     /**
@@ -56,8 +58,8 @@ public class FileController {
      * @desc create dir
      */
     @RequestMapping("/mkdir")
-    private boolean mkdir(@RequestBody FileRequest request) {
-        return fileService.mkdir(request.getPath());
+    private Result<Boolean> mkdir(@RequestBody FileRequest request) {
+        return Result.success(fileService.mkdir(request.getPath()));
     }
 
     /**
@@ -67,8 +69,18 @@ public class FileController {
      */
     @SneakyThrows
     @RequestMapping("/put")
-    private boolean put(@RequestParam("path") String path, @RequestParam("fileName") String fileName, @RequestParam("file") MultipartFile file) {
-        return fileService.put(path, fileName, file);
+    private Result<Boolean> put(@RequestParam("path") String path, @RequestParam("fileName") String fileName, @RequestParam("file") MultipartFile file) {
+        return Result.success(fileService.put(path, fileName, file));
+    }
+
+    /**
+     * @date 2022/6/27 16:19
+     * @author huangchenguang
+     * @desc delete file
+     */
+    @RequestMapping("/delete")
+    private Result<Boolean> delete(@RequestBody FileRequest request) {
+        return Result.success(fileService.delete(request.getPath(), request.getFileName()));
     }
 
 }
