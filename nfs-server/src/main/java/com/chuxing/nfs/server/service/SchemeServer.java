@@ -81,14 +81,13 @@ public class SchemeServer {
      * @author huangchenguang
      * @desc add data to map
      */
-    public boolean add(String path) {
+    public void add(String path) {
         String[] nodes = path.split("/");
         String key = StringUtils.join(Arrays.copyOf(nodes, nodes.length - 1), "/");
         String value = nodes[nodes.length - 1];
 
         TreeNode current = searchTree(key);
         current.getChild().put(value, new TreeNode(value));
-        return true;
     }
 
     /**
@@ -96,14 +95,13 @@ public class SchemeServer {
      * @author huangchenguang
      * @desc remove data to map
      */
-    public boolean delete(String path) {
+    public void delete(String path) {
         String[] nodes = path.split("/");
         String key = StringUtils.join(Arrays.copyOf(nodes, nodes.length - 1), "/");
         String value = nodes[nodes.length - 1];
 
         TreeNode current = searchTree(key);
         current.getChild().remove(value);
-        return false;
     }
 
     /**
