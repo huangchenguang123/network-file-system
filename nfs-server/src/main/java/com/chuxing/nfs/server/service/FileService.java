@@ -37,7 +37,7 @@ public class FileService {
         if (StringUtils.isBlank(path)) {
             throw new RuntimeException("path is blank");
         }
-        String localPath = String.format("%s/%s", config.getLocalStore(), path);
+        String localPath = String.format("%s%s", config.getLocalStore(), path);
         File file = new File(localPath);
         if (file.exists()) {
             String[] result = Optional.ofNullable(file.list()).orElse(new String[0]);
@@ -53,7 +53,7 @@ public class FileService {
      * @desc open file
      */
     public long get(String path, String fileName, OutputStream os) throws Exception {
-        String localPath = String.format("%s/%s/%s", config.getLocalStore(), path, fileName);
+        String localPath = String.format("%s%s/%s", config.getLocalStore(), path, fileName);
         File file = new File(localPath);
         if (file.exists()) {
             BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
@@ -78,7 +78,7 @@ public class FileService {
         if (StringUtils.isBlank(path)) {
             throw new RuntimeException("path is blank");
         }
-        File file = new File(String.format("%s/%s", config.getLocalStore(), path));
+        File file = new File(String.format("%s%s", config.getLocalStore(), path));
         boolean result = file.mkdir();
         if (result) {
             schemeServer.add(path);
@@ -92,7 +92,7 @@ public class FileService {
      * @desc create file
      */
     public boolean put(String path, String fileName, MultipartFile file) throws Exception {
-        File localFile = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
+        File localFile = new File(String.format("%s%s/%s", config.getLocalStore(), path, fileName));
         file.transferTo(localFile);
         schemeServer.add(String.format("%s/%s", path, fileName));
         return true;
@@ -104,7 +104,7 @@ public class FileService {
      * @desc delete file
      */
     public boolean delete(String path, String fileName) {
-        String localPath = String.format("%s/%s/%s", config.getLocalStore(), path, fileName);
+        String localPath = String.format("%s%s/%s", config.getLocalStore(), path, fileName);
         File file = new File(localPath);
         if (file.exists()) {
             boolean result = file.delete();

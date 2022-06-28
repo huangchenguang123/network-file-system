@@ -83,11 +83,11 @@ public class SchemeServer {
      */
     public void add(String path) {
         String[] nodes = path.split("/");
-        String key = StringUtils.join(Arrays.copyOf(nodes, nodes.length - 1), "/");
-        String value = nodes[nodes.length - 1];
+        String parent = StringUtils.join(Arrays.copyOf(nodes, nodes.length - 1), "/");
+        String currentFile = nodes[nodes.length - 1];
 
-        TreeNode current = searchTree(key);
-        current.getChild().put(value, new TreeNode(value));
+        TreeNode parentNode = searchTree(parent);
+        parentNode.getChild().put(currentFile, new TreeNode(currentFile));
     }
 
     /**
@@ -109,13 +109,14 @@ public class SchemeServer {
      * @author huangchenguang
      * @desc search node tree
      */
-    private TreeNode searchTree(String key) {
-        String[] keys = key.split("/");
-        TreeNode current = root;
-        for (int i = 0; i < keys.length; i++) {
-            current = current.getChild().get(keys[i]);
+    private TreeNode searchTree(String parent) {
+        String[] parents = parent.split("/");
+        TreeNode parentNode = root;
+        // need ignore root
+        for (int i = 1; i < parents.length; i++) {
+            parentNode = parentNode.getChild().get(parents[i]);
         }
-        return current;
+        return parentNode;
     }
 
 }

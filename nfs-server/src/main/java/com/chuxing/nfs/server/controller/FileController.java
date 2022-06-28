@@ -58,7 +58,7 @@ public class FileController {
      * @desc create dir
      */
     @RequestMapping("/mkdir")
-    private Result<Boolean> mkdir(@RequestBody FileRequest request) {
+    public Result<Boolean> mkdir(@RequestBody FileRequest request) {
         return Result.success(fileService.mkdir(request.getPath()));
     }
 
@@ -69,7 +69,7 @@ public class FileController {
      */
     @SneakyThrows
     @RequestMapping("/put")
-    private Result<Boolean> put(@RequestParam("path") String path, @RequestParam("fileName") String fileName, @RequestParam("file") MultipartFile file) {
+    public Result<Boolean> put(@RequestParam("path") String path, @RequestParam("fileName") String fileName, @RequestParam("file") MultipartFile file) {
         return Result.success(fileService.put(path, fileName, file));
     }
 
@@ -79,7 +79,7 @@ public class FileController {
      * @desc delete file
      */
     @RequestMapping("/delete")
-    private Result<Boolean> delete(@RequestBody FileRequest request) {
+    public Result<Boolean> delete(@RequestBody FileRequest request) {
         return Result.success(fileService.delete(request.getPath(), request.getFileName()));
     }
 
