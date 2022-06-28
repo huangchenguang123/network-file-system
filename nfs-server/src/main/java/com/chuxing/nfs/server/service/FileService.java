@@ -50,15 +50,20 @@ public class FileService {
      * @desc open file
      */
     public long get(String path, String fileName, OutputStream os) throws Exception {
-        File file = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
-        BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
-        byte[] buff = new byte[1024];
-        int i;
-        while ((i = bis.read(buff)) != -1) {
-            os.write(buff, 0, i);
-            os.flush();
+        String localPath = String.format("%s/%s/%s", config.getLocalStore(), path, fileName);
+        File file = new File(localPath);
+        if (file.exists()) {
+            BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
+            byte[] buff = new byte[1024];
+            int i;
+            while ((i = bis.read(buff)) != -1) {
+                os.write(buff, 0, i);
+                os.flush();
+            }
+            return file.length();
+        } else {
+            throw new RuntimeException(String.format("get: %s: No such file or directory", localPath));
         }
-        return file.length();
     }
 
     /**
