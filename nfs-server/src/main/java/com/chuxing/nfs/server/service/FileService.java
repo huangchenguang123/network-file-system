@@ -25,6 +25,9 @@ public class FileService {
     @Resource
     private NfsConfig config;
 
+    @Resource
+    private SchemeServer schemeServer;
+
     /**
      * @date 2022/6/27 15:30
      * @author huangchenguang
@@ -76,7 +79,11 @@ public class FileService {
             throw new RuntimeException("path is blank");
         }
         File file = new File(String.format("%s/%s", config.getLocalStore(), path));
-        return file.mkdir();
+        boolean result = file.mkdir();
+        if (result) {
+            schemeServer.add(path);
+        }
+        return result;
     }
 
     /**
@@ -87,6 +94,7 @@ public class FileService {
     public boolean put(String path, String fileName, MultipartFile file) throws Exception {
         File localFile = new File(String.format("%s/%s/%s", config.getLocalStore(), path, fileName));
         file.transferTo(localFile);
+        schemeServer.add(String.format("%s/%s", path, fileName));
         return true;
     }
 
@@ -99,7 +107,11 @@ public class FileService {
         String localPath = String.format("%s/%s/%s", config.getLocalStore(), path, fileName);
         File file = new File(localPath);
         if (file.exists()) {
-            return file.delete();
+            boolean result = file.delete();
+            if (result) {
+                schemeServer.delete(String.format("%s/%s", path, fileName));
+            }
+            return result;
         } else {
             throw new RuntimeException(String.format("delete: %s: No such file or directory", localPath));
         }
